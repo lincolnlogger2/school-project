@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rattlesnake Eats Kangaroos</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #222;
+      color: #fff;
+    }
+
+    h1 {
+      margin: 20px 0 10px;
+    }
+
+    canvas {
+      border: 3px solid #fff;
+      background-color: #111;
+    }
+
+    #score {
+      margin: 10px;
+      font-size: 20px;
+    }
+
+    #resetBtn {
+      display: none;
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>🐍 Rattlesnake Eats Kangaroos 🦘</h1>
+  <div id="score">Score: 0</div>
+  <canvas id="gameCanvas" width="400" height="400"></canvas>
+  <button id="resetBtn" onclick="resetGame()">🔁 Play Again</button>
+
+  <audio id="chompSound" src="chomp.mp3" preload="auto"></audio>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const box = 20;
+    const canvasSize = 400;
+    const totalBoxes = canvasSize / box;
+
+    let snake, direction, kangaroo, score, game, paused, moveCounter;
+    const chompSound = document.getElementById('chompSound');
+    const resetBtn = document.getElementById('resetBtn');
+
+    function startGame() {
+      snake = [{ x: 9 * box, y: 9 * box }];
+      direction = 'RIGHT';
+      kangaroo = spawnKangaroo();
+      score = 0;
+      paused = false;
+      moveCounter = 0;
+      document.getElementById('score').innerText = 'Score: ' + score;
+      resetBtn.style.display = 'none';
+      if (game) clearInterval(game);
+      game = setInterval(drawGame, 150);
+    }
+
+    function drawRattlesnakeSegment(x, y, isTail = false) {
+      ctx.fillStyle = isTail ? '#bfa85a' : '#8b5e3c';
+      ctx.strokeStyle = '#604020';
+      ctx.fillRect(x, y, box, box);
+      ctx.strokeRect(x, y, box, box);
+    }
+
+    function drawKangaroo(x, y) {
+      ctx.font = '20px serif';
+      ctx.fillText('🦘', x + 2, y + 18);
+    }
+
+    function spawnKangaroo() {
+      let pos;
+      do {
+        pos = {
+          x: Math.floor(Math.random() * totalBoxes) * box,
+          y: Math.floor(Math.random() * totalBoxes) * box
+        };
+      } while (snake.some(segment => segment.x === pos.x && segment.y === pos.y));
+      return pos;
+    }
+
+    function moveKangaroo() {
+      const directions = [
+        { x: -box, y: 0 },
+        { x: box, y: 0 },
+        { x: 0, y: -box },
+        { x: 0, y: box }
+      ];
+      const move = directions[Math.floor(Math.random() * directions.length)];
+      let newX = kangaroo.x + move.x;
+      let newY = kangaroo.y + move.y;
+
+      // keep within bounds
+      if (newX >= 0 && newX < canvas.width && newY >= 0 && newY < canvas.height) {
+        kangaroo.x = newX;
+        kangaroo.y = newY;
+      }
+    }
+
+    function playEatSound() {
+      chompSound.currentTime = 0;
+      chompSound.play();
+    }
+
+    function drawGame() {
+      if (paused) return;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = 0; i < snake.length; i++) {
+        const isTail = i === snake.length - 1;
+        drawRattlesnakeSegment(snake[i].x, snake[i].y, isTail);
+      }
+
+      drawKangaroo(kangaroo.x, kangaroo.y);
+
+      let headX = snake[0].x;
+      let headY = snake[0].y;
+
+      if (direction === 'LEFT') headX -= box;
+      if (direction === 'UP') headY -= box;
+      if (direction === 'RIGHT') headX += box;
+      if (direction === 'DOWN') headY += box;
+
+      const newHead = { x: headX, y: headY };
+
+      // wall collision
+      if (
+        headX < 0 || headX >= canvas.width ||
+        headY < 0 || headY >= canvas.height
+      ) {
+        endGame();
+        return;
+      }
+
+      // self collision
+      for (let i = 1; i < snake.length; i++) {
+        if (newHead.x === snake[i].x && newHead.y === snake[i].y) {
+          endGame();
+          return;
+        }
+      }
+
+      // kangaroo eaten
+      if (headX === kangaroo.x && headY === kangaroo.y) {
+        score++;
+        document.getElementById('score').innerText = 'Score: ' + score;
+        kangaroo = spawnKangaroo();
+        playEatSound();
+      } else {
+        snake.pop();
+      }
+
+      snake.unshift(newHead);
+
+      // move kangaroo every few frames
+      moveCounter++;
+      if (moveCounter % 5 === 0) {
+        moveKangaroo();
+      }
+    }
+
+    function endGame() {
+      clearInterval(game);
+      alert('💀 Game over! Final score: ' + score);
+      resetBtn.style.display = 'inline-block';
+    }
+
+    function resetGame() {
+      startGame();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      const key = e.key;
+      if (key === 'ArrowLeft' && direction !== 'RIGHT') direction = 'LEFT';
+      if (key === 'ArrowUp' && direction !== 'DOWN') direction = 'UP';
+      if (key === 'ArrowRight' && direction !== 'LEFT') direction = 'RIGHT';
+      if (key === 'ArrowDown' && direction !== 'UP') direction = 'DOWN';
+      if (key === ' ') paused = !paused; // pause/unpause on space
+    });
+
+    // Start game on page load
+    startGame();
+  </script>
+</body>
+</html>

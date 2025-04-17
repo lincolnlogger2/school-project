@@ -1,0 +1,158 @@
+/* General page style */
+body {
+    background-color: #107dac; /* Lighter blue background */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    border: 5px solid #ffffff; /* White border around the page */
+    box-sizing: border-box;
+}
+
+/* Navigation bar */
+.nav {
+    background-color: #004d99; /* Dark blue background for a professional feel */
+    padding: 15px 0;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-bottom: 2px solid #ffffff; /* White line separating the navigation bar */
+}
+
+/* Navigation links */
+.nav a {
+    color: #ffffff;
+    margin: 0 20px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.nav a:hover {
+    background-color: #005bb5; /* Hover effect */
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Header section */
+.header {
+    padding: 60px;
+    text-align: center;
+    background-image: url('https://images.unsplash.com/photo-1470290378698-263fa7ca1ef7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.3);
+    border-bottom: 2px solid #ffffff; /* White line separating the header section */
+}
+
+/* Content blocks */
+.content, .lists, .video, .tableau {
+    padding: 40px;
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-bottom: 2px solid #ffffff; /* White line separating content sections */
+}
+
+/* List styles */
+.lists {
+    text-align: center;
+}
+
+.lists ol {
+    display: inline-block;
+    text-align: left;
+    font-size: 16px;
+    margin-top: 20px;
+    font-style: initial;
+}
+
+.lists ul {
+    font-style: italic;
+}
+
+.lists li {
+    padding: 8px 0;
+}
+
+/* Image style */
+.space-img {
+    width: 80%;
+    max-width: 600px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 40px;
+    background-color: #004d99; /* Dark blue footer */
+    border-top: 2px solid #ffffff; /* White line separating footer */
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+footer a:hover {
+    color:#a0c4ff;
+    text-decoration: underline;
+}
+
+/* Ensure that Tableau container and object are properly centered */
+.tableau {
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    margin: 0 auto; /* Centers the whole .tableau container */
+}
+
+.tableauPlaceholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+}
+
+.tableauPlaceholder object {
+    width: 100%;
+    max-width: 800px; /* Limit the max width of the viz */
+    height: auto;
+    margin: 0 auto;
+    display: block;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+/* Buttons for better style */
+button {
+    background-color: #0077b6;
+    color: #ffffff;
+    padding: 12px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background-color: #005f87;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+button:focus {
+    outline: none;
+}
